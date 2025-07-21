@@ -5,6 +5,9 @@ on:
   push:
     branches:
       - 'develop'
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   call-feature-ci:
