@@ -5,6 +5,9 @@ on:
   push:
     branches:
       - 'feature/*' # includes feature branches
+  pull_request:
+      branches:
+        - develop
 
 jobs:
   call-feature-ci:
