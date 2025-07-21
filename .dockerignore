@@ -7,4 +7,5 @@ node_modules
 .gitignore
 Dockerfile
 README.md
+coverage
 

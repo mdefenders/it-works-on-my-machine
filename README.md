@@ -9,8 +9,8 @@
 
 ## Intentionally Out of Scope
 
-Following features, required in the real world, were intentionally excluded because of complexity, but may be
-implemented later keeping the current design:
+Following features, required in the real world, were intentionally excluded because of complexity or just for time
+saving, but may be implemented later keeping the current design:
 
 - Support of different simultaneous feature builds of the service deployed in the development environment and multiple
   releases of the service deployed in the staging or production environments, Both features require
@@ -21,6 +21,7 @@ implemented later keeping the current design:
 - Integration with other services for end-to-end tests on release deployment.
 - New services onboarding automation.
 - Release triggering automation.
+- Fancy markdown for pipeline runs to represent results
 
 ## Architecture & Design
 
@@ -189,6 +190,8 @@ COPY server.js .
 Dependabot added it to the repository to ensure dependencies are up-to-date safely
 
 ### Tests
+
+Very basic unit test added to use with Code Quality Gates
 
 ### Health Checks
 
