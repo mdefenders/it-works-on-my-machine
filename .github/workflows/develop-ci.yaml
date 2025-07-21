@@ -1,0 +1,13 @@
+name: Feature Branch CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'develop'
+
+jobs:
+  call-feature-ci:
+    name: Call Develop-CI Workflow
+    uses: mdefenders/shared-workflows/.github/workflows/develop-ci.yaml@dev
+    secrets: inherit
