@@ -1,0 +1,16 @@
+name: Feature Branch CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'feature/*' # includes feature branches
+  pull_request:
+      branches:
+        - develop
+
+jobs:
+  call-feature-ci:
+    name: Call Feature-CI Workflow
+    uses: mdefenders/shared-workflows/.github/workflows/feature-ci.yaml@dev
+    secrets: inherit
