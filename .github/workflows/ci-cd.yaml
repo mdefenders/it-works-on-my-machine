@@ -1,0 +1,12 @@
+name: CI/CD Workflow
+
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+
+jobs:
+  call-ci-cd:
+    name: Call CI/CD Workflow
+    uses: mdefenders/shared-workflows/.github/workflows/ci-cd.yaml@dev
+    secrets: inherit

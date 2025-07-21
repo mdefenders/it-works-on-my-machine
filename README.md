@@ -9,8 +9,8 @@
 
 ## Intentionally Out of Scope
 
-Following features, required in the real world, were intentionally excluded because of complexity, but may be
-implemented later keeping the current design:
+Following features, required in the real world, were intentionally excluded because of complexity or just for time
+saving, but may be implemented later keeping the current design:
 
 - Support of different simultaneous feature builds of the service deployed in the development environment and multiple
   releases of the service deployed in the staging or production environments, Both features require
@@ -21,6 +21,7 @@ implemented later keeping the current design:
 - Integration with other services for end-to-end tests on release deployment.
 - New services onboarding automation.
 - Release triggering automation.
+- Fancy markdown for pipeline runs to represent results
 
 ## Architecture & Design
 
@@ -70,7 +71,7 @@ The service follows a Git-based promotion model:
 
 ### GitHub Actions (CI)
 
-- Code quality checks (lint, type check, unit tests)
+- Code quality checks (lint, unit tests, coverage threshold)
 - Docker build
 - Push image to container registry
 - Update GitOps deployment manifests per environment (per branch logic)
@@ -190,7 +191,11 @@ Dependabot added it to the repository to ensure dependencies are up-to-date safe
 
 ### Tests
 
+Very basic unit test added to use with Code Quality Gates
+
 ### Health Checks
+
+## GitHub Organization/Repo configuration
 
 ## Summary
 
