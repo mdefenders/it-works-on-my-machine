@@ -71,7 +71,7 @@ The service follows a Git-based promotion model:
 
 ### GitHub Actions (CI)
 
-- Code quality checks (lint, type check, unit tests)
+- Code quality checks (lint, unit tests, coverage threshold)
 - Docker build
 - Push image to container registry
 - Update GitOps deployment manifests per environment (per branch logic)

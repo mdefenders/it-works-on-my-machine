@@ -7,6 +7,6 @@ on:
       - 'feature/*' # includes feature branches
 
 jobs:
-  call-code-quality:
-    name: Call Code Quality Workflow
-    uses: mdefenders/shared-workflows/.github/workflows/code-quality.yaml@dev
+  call-feature-ci:
+    name: Call Feature-CI Workflow
+    uses: mdefenders/shared-workflows/.github/workflows/feature-ci.yaml@dev
