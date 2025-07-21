@@ -1,0 +1,12 @@
+name: Publish Docker Image
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'feature/*' # includes feature branches
+
+jobs:
+  call-code-quality:
+    name: Call Code Quality Workflow
+    uses: mdefenders/shared-workflows/.github/workflows/code-quality.yaml@dev
