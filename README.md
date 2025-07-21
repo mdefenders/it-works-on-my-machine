@@ -195,6 +195,8 @@ Very basic unit test added to use with Code Quality Gates
 
 ### Health Checks
 
+## GitHub Organization/Repo configuration
+
 ## Summary
 
 This project showcases:
