@@ -10,3 +10,4 @@ jobs:
   call-feature-ci:
     name: Call Feature-CI Workflow
     uses: mdefenders/shared-workflows/.github/workflows/feature-ci.yaml@dev
+    secrets: inherit
