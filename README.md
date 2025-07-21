@@ -22,6 +22,7 @@ saving, but may be implemented later keeping the current design:
 - New services onboarding automation.
 - Release triggering automation.
 - Fancy markdown for pipeline runs to represent results
+- Custom GitHub Actions for CI/CD pipeline steps, using existing actions and run bash code instead.
 
 ## Architecture & Design
 
