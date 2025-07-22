@@ -202,8 +202,31 @@ Very basic unit test added to use with Code Quality Gates
 
 ### Health Checks
 
-Added basic HTTP health checks (/health) to the Kubernetes Deployment to ensure the service is running and responsive.
-Configured the Deployment with a RollingUpdate strategy for safe and zero-downtime upgrades.
+- Added basic HTTP health checks (/health) to the Kubernetes Deployment to ensure the service is running and responsive.
+- /health endpoint returns the deployed build version and commit hash. I
+- Configured the Deployment with a RollingUpdate strategy for safe and zero-downtime upgrades.
+
+> If any security concerns, /health endpoint have to be secured.
+
+## Testing strategy
+
+The testing strategy is based on the following principles:
+
+- **Unit tests**: On each code commit
+- **Integration tests**: On develop build deplyoment to dev environment
+- **End-to-end tests**: On release branch build deployment to staging environment
+- **Smoke tests**: On production deployment to ensure the service is running and responsive
+
+> The most challenging aspect of the testing strategy is reliably triggering integration, end-to-end, and smoke tests
+> after the deployment rollout. The most robust solution involves configuring the CI/CD pipeline to query the Kubernetes
+> or ArgoCD API to verify that the deployment has completed and the service is running before executing the tests.
+> However, since the CI/CD pipeline in this context cannot access the Kubernetes API, alternative approaches were
+> evaluated.
+
+> One option considered was pushing deployment status metrics from the running service to a public endpoint—such as the
+> free tier of Grafana Cloud. However, this solution was deemed neither reusable nor sufficiently reliable and partially
+> manual. As a result, the final approach involved mocking Kubernetes API/CLI calls to simulate a successful deployment,
+> allowing the tests to proceed as if the rollout had completed.
 
 ## GitHub Organization/Repo configuration
 
@@ -238,6 +261,7 @@ it-works-on-my-machine-fcbcb5b88-8l6nt   1/1     Running   0          51m
 it-works-on-my-machine-fcbcb5b88-g75ph   1/1     Running   0          51m
 it-works-on-my-machine-fcbcb5b88-tcx29   1/1     Running   0          51m
 ```
+
 - Use `kubectl port-forward` to access the service locally:
 
 ```bash
@@ -246,9 +270,49 @@ curl localhost:3000/health
 Still working... on *my* machine 🧃
 ```
 
+## Basic security
+
+- npm dependency security checks are enabled via GitHub Actions on Code Quality Checks
+- Images are scanned for vulnerabilities with Trivy in the CI pipeline, devaloper branch and higher builds fail on
+  vulnerabilities. Scan report is attached to the pipeline run report.
+
+## Basic Traceability
+
+- Docker images for develpment branch have short commit SHA as a tag, so it is possible to trace the image back to the
+  commit
+- /health endpoint returns the deployed build version and commit hash, so it is possible to trace the deployment
+  with http request
+
+```bash 
+curl -ks localhost:3000/health | jq
+{
+  "status": "ok",
+  "version": "develop-9909142",
+  "commit": "9909142"
+}
+```
+
+- Kunernetes deployment label, contains image tag added to the deployment, so it is possible to trace the
+  deployment back to the image tag
+
+```bash
+get pods -l tag=develop-990914200
+NAME                                      READY   STATUS    RESTARTS   AGE
+it-works-on-my-machine-68dcd5bd4d-5d5fp   1/1     Running   0          24m
+it-works-on-my-machine-68dcd5bd4d-q2bmf   1/1     Running   0          24m
+it-works-on-my-machine-68dcd5bd4d-tp6cz   1/1     Running   0          25m
+
+kubectl get pods --show-labels
+NAME                                      READY   STATUS    RESTARTS   AGE   LABELS
+it-works-on-my-machine-68dcd5bd4d-5d5fp   1/1     Running   0          25m   app=it-works-on-my-machine,pod-template-hash=68dcd5bd4d,tag=develop-9909142
+it-works-on-my-machine-68dcd5bd4d-q2bmf   1/1     Running   0          25m   app=it-works-on-my-machine,pod-template-hash=68dcd5bd4d,tag=develop-9909142
+it-works-on-my-machine-68dcd5bd4d-tp6cz   1/1     Running   0          25m   app=it-works-on-my-machine,pod-template-hash=68dcd5bd4d,tag=develop-9909142 
+```
+
 ## Afterparty Backlog
 
+- [ ] Graphana Dashboards
 - [ ] Rewrite Bash sections with custom GitHub Actions
 - [ ] Add service to Helm chart to make local testing easier
 - [ ] Replace more hardcoded values with GitHub Actions Variables
-- [ ] Enable pre-Vreated Branch Protection Rules and allow GitHub Actions to push to protected branches
+- [ ] Enable pre-created Branch Protection Rules and allow GitHub Actions to push to protected branches
