@@ -245,3 +245,9 @@ kubectl port-forward it-works-on-my-machine-fcbcb5b88-8l6nt 3000:3000
 curl localhost:3000/health
 Still working... on *my* machine 🧃
 ```
+
+## Afterparty Backlog
+
+- [ ] Rewrite Bash sections with custom GitHub Actions
+- [ ] Add service to Helm chart to make local testing easier
+- [ ] Replace more hardcoded values with GitHub Actions Variables

@@ -8,6 +8,7 @@ on:
     paths-ignore:
       - 'deploy/**'
       - '**/*.md'
+      - 'versions.json'
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
