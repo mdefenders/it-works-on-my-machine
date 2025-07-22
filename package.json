@@ -7,7 +7,7 @@
     "test:unit": "jest --config=tests/configs/jest.unit.config.js",
     "test:integration": "jest --config=tests/configs/jest.integration.config.js",
     "test:smoke": "jest --config=tests/configs/jest.smoke.config.js",
-    "test:endtoend": "jest --config=tests/endtoend/jest.smoke.config.js"
+    "test:endtoend": "jest --config=tests/configs/jest.endtoend.config.js"
   },
   "keywords": [],
   "author": "",
