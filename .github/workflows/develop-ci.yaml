@@ -5,6 +5,9 @@ on:
   push:
     branches:
       - 'develop'
+    paths-ignore:
+      - 'deploy/**'
+      - '**/*.md'
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false

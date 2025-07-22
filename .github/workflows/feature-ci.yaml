@@ -4,8 +4,10 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - 'feature/*' # includes feature branches
-
+      - 'feature/*'
+    paths-ignore:
+      - 'deploy/**'
+      - '**/*.md'
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false

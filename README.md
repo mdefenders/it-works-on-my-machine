@@ -149,10 +149,14 @@ Composite strategy combining Git semantics and `package.json`:
 Code quality checks are enforced or recommended at various stages:
 
 - ✅ Lint (ESLint or equivalent)
-- ✅ Type checks (TypeScript, etc.)
+- ✅ Code formatting
+- ✅ Dependency security checks
 - ✅ Unit & integration tests
 - ✅ Test coverage threshold
-- ✅ Code formatting
+- ✅ Image vulnerability scanning
+
+> The strategy starts with fewer restrictions during early development and gradually increases enforcement as code is
+promoted to higher environments.
 
 ## Rollback Strategy
 
