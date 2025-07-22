@@ -1,1 +1,2 @@
-image: develop-b4a27b4
+image: mdefenders/it-works-on-my-machine:develop-711cf04
+app: it-works-on-my-machine
