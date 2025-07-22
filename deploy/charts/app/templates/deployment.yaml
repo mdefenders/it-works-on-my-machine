@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: it-works-on-my-machine
+  name: {{ .Values.app }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: it-works-on-my-machine
+      app: {{ .Values.app }}
   template:
     metadata:
       labels:
-        app: it-works-on-my-machine
+        app: {{ .Values.app }}
     spec:
       containers:
-        - name: it-works-on-my-machine
-          image: mdefenders/it-works-on-my-machine:{{ .Values.tag }}
+        - name: {{ .Values.app }}
+          image: {{ .Values.image }}
           ports:
             - containerPort: 3000
