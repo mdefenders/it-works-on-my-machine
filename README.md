@@ -228,6 +228,8 @@ The testing strategy is based on the following principles:
 > manual. As a result, the final approach involved mocking Kubernetes API/CLI calls to simulate a successful deployment,
 > allowing the tests to proceed as if the rollout had completed.
 
+> In the real world scenario, kubectl cli have to be replaced with custom GitHub Action to make Kubernetes API calls.
+
 ## GitHub Organization/Repo configuration
 
 ## Summary
