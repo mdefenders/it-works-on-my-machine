@@ -5,6 +5,6 @@ describe('GET /health', () => {
   it('should return 200 and correct text', async () => {
     const response = await request(app).get('/health');
     expect(response.status).toBe(200);
-    expect(response.text).toBe('Still working... on *my* machine 🧃');
+    expect(response.text).toContain('\"status\":\"ok\",\"version\":');
   });
 });

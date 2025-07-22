@@ -251,3 +251,4 @@ Still working... on *my* machine 🧃
 - [ ] Rewrite Bash sections with custom GitHub Actions
 - [ ] Add service to Helm chart to make local testing easier
 - [ ] Replace more hardcoded values with GitHub Actions Variables
+- [ ] Enable pre-Vreated Branch Protection Rules and allow GitHub Actions to push to protected branches

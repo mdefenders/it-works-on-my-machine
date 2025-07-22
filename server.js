@@ -1,9 +1,24 @@
 // server.js
 const express = require('express');
+const fs = require('fs');
+const path = require('path');
+
 const app = express();
 
-app.get('/health', (req, res) => res.send('Still working... on *my* machine 🧃'));
-
+let versionInfo = {};
+try {
+  const versionPath = path.join(__dirname, 'version.json');
+  versionInfo = JSON.parse(fs.readFileSync(versionPath, 'utf8'));
+} catch (err) {
+  console.warn("Could not read version file", err);
+}
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    version: versionInfo.version || 'unknown',
+    commit: versionInfo.commit || 'unknown'
+  });
+});
 module.exports = app;
 
 if (require.main === module) {
