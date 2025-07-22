@@ -37,6 +37,8 @@ and observability.
 
 Although in this demo the Helm chart is part of the repository, in production we recommend a centralized chart registry
 for reusability.
+> The Helm chart provided is very basic and clear example to demonstrate only CD-related features, not a full-fledged.
+> It creates Kuberenets deployment with probes, no Ingress or Service resources, as they are not required for the demo.
 
 ### CI/CD & Promotion Flow
 
@@ -156,7 +158,7 @@ Code quality checks are enforced or recommended at various stages:
 - ✅ Image vulnerability scanning
 
 > The strategy starts with fewer restrictions during early development and gradually increases enforcement as code is
-promoted to higher environments.
+> promoted to higher environments.
 
 ## Rollback Strategy
 
@@ -200,6 +202,9 @@ Very basic unit test added to use with Code Quality Gates
 
 ### Health Checks
 
+Added basic HTTP health checks (/health) to the Kubernetes Deployment to ensure the service is running and responsive.
+Configured the Deployment with a RollingUpdate strategy for safe and zero-downtime upgrades.
+
 ## GitHub Organization/Repo configuration
 
 ## Summary
@@ -214,3 +219,29 @@ This project showcases:
 
 While scoped down, the approach is **modular, scalable, and production-aware** — a solid starting point for a full
 microservice platform.
+
+## Local Kubernetes deployment
+
+You can test the deployment locally using following:
+
+- Install local Kubernetes cluster, activating Kubernetes in Docker Desktop or using Minikube
+- Install Helm (brew install helm for MacOS)
+- Pull the repository
+- Run the following commands from the root of the repository:
+
+```bash
+helm upgrade --install it-works-on-my-machine  ./deploy/charts/app -f ./deploy/environments/dev/values.yaml
+
+kubectl get pods
+NAME                                     READY   STATUS    RESTARTS   AGE
+it-works-on-my-machine-fcbcb5b88-8l6nt   1/1     Running   0          51m
+it-works-on-my-machine-fcbcb5b88-g75ph   1/1     Running   0          51m
+it-works-on-my-machine-fcbcb5b88-tcx29   1/1     Running   0          51m
+```
+- Use `kubectl port-forward` to access the service locally:
+
+```bash
+kubectl port-forward it-works-on-my-machine-fcbcb5b88-8l6nt 3000:3000
+curl localhost:3000/health
+Still working... on *my* machine 🧃
+```
