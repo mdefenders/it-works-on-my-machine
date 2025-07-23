@@ -1,1 +1,3 @@
-image: develop-b4a27b4
+image: mdefenders/it-works-on-my-machine
+tag: 1.0.7-rc-1d77f82
+app: it-works-on-my-machine
