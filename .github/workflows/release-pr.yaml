@@ -1,4 +1,4 @@
-name: Release Branch CI
+name: Release Branch PR CI
 
 on:
   pull_request:
