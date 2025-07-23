@@ -21,7 +21,6 @@ saving, but may be implemented later keeping the current design:
 - Integration with other services for end-to-end tests on release deployment.
 - New services onboarding automation.
 - Release triggering automation.
-- Fancy markdown for pipeline runs to represent results
 - Custom GitHub Actions for CI/CD pipeline steps, using existing actions and run bash code instead.
 
 ## Architecture & Design
@@ -49,22 +48,26 @@ The service follows a Git-based promotion model:
     | Developer   |------------------->|  feature/*       |
     +-------------+                    +------------------+
                                            | CI only
-                                           v Code quality gates
-     Merge PR into                     +------------- -----+
+                                           | Unittests 
+                                           v Build dry-run
+     Merge PR into                     +------------------+
      develop                           |   develop        |
                                        +------------------+
                                            | Build, 
-                                           v Dev deploy
+                                           | Dev deploy
+                                           v Integration tests
      Release branch created            +------------------+
      from develop                      |  release/x.y.z   |
                                        +------------------+
                                            | Build,
-                                           v Staging deploy
+                                           | Staging deploy
+                                           v End-to-End tests
      Merge PR into                     +------------------+
      main                              |      main        |
                                        +------------------+
                                            | Tagging,
-                                           v Production deploy
+                                           | Production deploy
+                                           v Smoke-tests
                                            
                                       GitOps/CD system
                                       updates cluster
@@ -134,14 +137,14 @@ GitFlow model is used:
 Composite strategy combining Git semantics and `package.json`:
 
 - Dev builds: tagged with short commit SHA (`dev-<sha>`)
-- Releases candidates: versioned by branch name and rc autoincrement (e.g., `release/1.2.3-rc1`)
+- Releases candidates: versioned by branch name and rc autoincrement (e.g., `release/1.2.3-rc-<sha>`)
 - On merge to `main`:
     - `package.json` version updated with release version (e.g., `1.2.3`)
     - Git tag `v1.2.3` created
 - Hotfixes update `package.json` and create tags similarly
 
 > Why:
-> - Using sha1 tagging fo dev builds allows to avoid noise in the repository with build numbers and provides
+> - Using sha1 tagging fo dev builds allows to avoid noise in the repository with build tags and provides
     traceability
 > - Using `package.json` versioning for releases allows to use standard npm versioning and
     semantic versioning, which is widely used in the Node.js ecosystem
@@ -318,3 +321,4 @@ it-works-on-my-machine-68dcd5bd4d-tp6cz   1/1     Running   0          25m   app
 - [ ] Add service to Helm chart to make local testing easier
 - [ ] Replace more hardcoded values with GitHub Actions Variables
 - [ ] Enable pre-created Branch Protection Rules and allow GitHub Actions to push to protected branches
+- [ ] Manual staging End-to-End triggering
