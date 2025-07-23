@@ -245,6 +245,8 @@ The testing strategy is based on the following principles:
 
 ## GitHub Organization/Repo configuration
 
+- Set develop branch as the default branch
+
 ## Summary
 
 This project showcases:
