@@ -2,9 +2,6 @@ name: Release Branch CI
 
 on:
   workflow_dispatch:
-  create:
-    branches:
-      - 'release/*'
   push:
     branches:
       - 'release/*'
