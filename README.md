@@ -21,8 +21,7 @@ saving, but may be implemented later keeping the current design:
 - Integration with other services for end-to-end tests on release deployment.
 - New services onboarding automation.
 - Release triggering automation.
-- Fancy markdown for pipeline runs to represent results
-- Custom GitHub Actions for CI/CD pipeline steps, using existing actions and run bash code instead.
+- Replace bash code in CI/CD pipeline steps with custom GitHub Actions for better maintainability.
 - Fixing shared workflows with tagged version instead of using `dev` reference.
 
 ## Architecture & Design
