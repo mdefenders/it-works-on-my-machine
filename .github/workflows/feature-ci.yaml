@@ -5,6 +5,9 @@ on:
   create:
     branches:
       - 'feature/*'
+  pull_request:
+    branches:
+      - 'develop'
   push:
     branches:
       - 'feature/*'
