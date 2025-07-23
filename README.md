@@ -22,6 +22,7 @@ saving, but may be implemented later keeping the current design:
 - New services onboarding automation.
 - Release triggering automation.
 - Custom GitHub Actions for CI/CD pipeline steps, using existing actions and run bash code instead.
+- Fixing shared workflows with tagged version instead of using `dev` reference.
 
 ## Architecture & Design
 
@@ -55,23 +56,42 @@ The service follows a Git-based promotion model:
                                        +------------------+
                                            | Build, 
                                            | Dev deploy
-                                           v Integration tests
+                                           v Regression/Integration
+                                             tests
      Release branch created            +------------------+
      from develop                      |  release/x.y.z   |
                                        +------------------+
                                            | Build,
                                            | Staging deploy
-                                           v End-to-End tests
+                                           v Integration tests
      Merge PR into                     +------------------+
      main                              |      main        |
                                        +------------------+
+                                           | Build,
+                                           | Pre-Production deploy
+                                           v End-to-End tests
+     Prod depoy trigger                +------------------+
+                                       |      main        |
+                                       +------------------+
                                            | Tagging,
                                            | Production deploy
-                                           v Smoke-tests
-                                           
+                                           v Smoke-tests                                           
                                       GitOps/CD system
                                       updates cluster
 ```
+
+The flow have to be protected with branch protection rules to disable direct pushes to `develop`, `release/*` and `main`
+branches, except GitHub Actions token.
+
+- Developers work on features in `feature/*` branches, triggering CI checks
+- Once a feature is ready, it is merged into `develop` and deployed to the development environment for integration
+  testing
+- New release branches (`release/x.y.z`) are cut from `develop` for staging QA
+- On approval, merged into `main`, tagged (e.g., `v1.2.3`) to trigger pre-production deployment, extensive end-to-end
+  tests
+- Production release approved and GitOps deployment of the current approved release is triggered by manual pipeline run
+- Hotfixes follow a similar flow via `hotfix/*` → `main` with intermediate staging deployment for testing
+-
 
 ## CI/CD Pipeline Logic
 
@@ -121,16 +141,6 @@ GitFlow model is used:
 > - Well reflects the promotion flow chosen (see below)
 > - May be easily extend to support multiple feature version deployed to dev and multiple releases deployed to
     staging/prod in the future
-
-## Promotion Flow
-
-- Developers work on features in `feature/*` branches, triggering CI checks
-- Once a feature is ready, it is merged into `develop` and deployed to the development environment for integration
-  testing
-- New release branches (`release/x.y.z`) are cut from `develop` for staging QA
-- On approval, merged into `main` to trigger production deployment
-- Production releases are tagged (e.g., `v1.2.3`) and synced to cluster via GitOps
-- Hotfixes follow a similar flow via `hotfix/*` → `main` with intermediate staging deployment for testing
 
 ## Versioning Strategy
 
