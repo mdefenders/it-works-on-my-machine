@@ -1,0 +1,20 @@
+name: Develop Branch CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'develop'
+    paths-ignore:
+      - 'deploy/**'
+      - '**/*.md'
+      - 'versions.json'
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  call-feature-ci:
+    name: Call Develop-CI Workflow
+    uses: mdefenders/shared-workflows/.github/workflows/develop-ci.yaml@dev
+    secrets: inherit

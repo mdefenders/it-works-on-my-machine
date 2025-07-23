@@ -1,0 +1,23 @@
+name: Release Branch CI
+
+on:
+  workflow_dispatch:
+  create:
+    branches:
+      - 'release/*'
+  push:
+    branches:
+      - 'release/*'
+    paths-ignore:
+      - 'deploy/**'
+      - '**/*.md'
+      - 'versions.json'
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  call-feature-ci:
+    name: Call Release-CI Workflow
+    uses: mdefenders/shared-workflows/.github/workflows/release-ci.yaml@dev
+    secrets: inherit
