@@ -14,7 +14,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  call-feature-ci:
+  call-ci:
     name: Call Develop-CI Workflow
     uses: mdefenders/shared-workflows/.github/workflows/develop-ci.yaml@dev
     secrets: inherit

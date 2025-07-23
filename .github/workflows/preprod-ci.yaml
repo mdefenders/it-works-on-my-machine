@@ -1,10 +1,10 @@
-name: Feature Branch CI
+name: PreProd Branch CI
 
 on:
   workflow_dispatch:
   push:
     branches:
-      - 'feature/*'
+      - 'master'
     paths-ignore:
       - 'deploy/**'
       - '**/*.md'
@@ -15,6 +15,6 @@ concurrency:
 
 jobs:
   call-ci:
-    name: Call Feature-CI Workflow
-    uses: mdefenders/shared-workflows/.github/workflows/feature-ci.yaml@dev
+    name: Call PreProd-CI Workflow
+    uses: mdefenders/shared-workflows/.github/workflows/release-ci.yaml@dev
     secrets: inherit
