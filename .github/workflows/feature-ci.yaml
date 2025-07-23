@@ -2,6 +2,9 @@ name: Feature Branch CI
 
 on:
   workflow_dispatch:
+  create:
+    branches:
+      - 'feature/*'
   push:
     branches:
       - 'feature/*'
