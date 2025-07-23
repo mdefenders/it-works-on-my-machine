@@ -1,0 +1,16 @@
+name: Release Branch PR CI
+
+on:
+  pull_request:
+    branches:
+      - 'main'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  call-ci:
+    name: Call Release-CI Workflow
+    uses: mdefenders/shared-workflows/.github/workflows/release-pr.yaml@dev
+    secrets: inherit
