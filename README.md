@@ -3,7 +3,8 @@
 The CI/CD has been developed with the goal of making your work easier and more productive.  
 Feel free to reach out to the team and share your ideas for improvements.
 
-> **IMPORTANT:** All [reusable workflows](https://github.com/mdefenders/shared-workflows) places on separate repo 
+> **IMPORTANT:** All [reusable workflows](https://github.com/mdefenders/shared-workflows) are stored in a separate
+> repository.
 
 ## Overview
 
