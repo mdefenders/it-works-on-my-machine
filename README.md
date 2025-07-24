@@ -1,4 +1,23 @@
-# it-works-on-my-machine
+# Brief Developer Onboarding Guide
+
+The CI/CD developed with goal to make your work easier and more productive. Feel fre to ping the team and share you
+ideas how to improve it.
+
+## Overview
+
+Te flow is based on [GitFlow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) + PR
+principles, using GitHub Actions for CI and a GitOps tool (e.g., ArgoCD, FluxCD) for CD. So your only tool to interact
+with it for most use-cases is [Github UI](https://github.com/mdefenders/it-works-on-my-machine/).
+
+## Promote your code from Feature Branch to Production
+
+## Add tests
+
+## Workflow Run Report
+
+> Read TL;DR or ping us for more details
+
+# TL;DR
 
 ## Goals
 
@@ -163,12 +182,12 @@ Composite strategy combining Git semantics and `package.json`:
 
 Code quality checks are enforced or recommended at various stages:
 
-- ✅ Lint (ESLint or equivalent)
-- ✅ Code formatting
-- ✅ Dependency security checks
-- ✅ Unit & integration tests
-- ✅ Test coverage threshold
-- ✅ Image vulnerability scanning
+- Lint (ESLint or equivalent)
+- Code formatting
+- Dependency security checks
+- Unit & integration tests
+- Test coverage threshold
+- Image vulnerability scanning
 
 > The strategy starts with fewer restrictions during early development and gradually increases enforcement as code is
 > promoted to higher environments.
@@ -211,7 +230,9 @@ Dependabot added it to the repository to ensure dependencies are up-to-date safe
 
 ### Tests
 
-Very basic unit test added to use with Code Quality Gates
+Very basic unit test added as a placehplder for all kind of tests, which may be added later.
+
+```javascript
 
 ### Health Checks
 
@@ -325,6 +346,37 @@ it-works-on-my-machine-68dcd5bd4d-5d5fp   1/1     Running   0          25m   app
 it-works-on-my-machine-68dcd5bd4d-q2bmf   1/1     Running   0          25m   app=it-works-on-my-machine,pod-template-hash=68dcd5bd4d,tag=develop-9909142
 it-works-on-my-machine-68dcd5bd4d-tp6cz   1/1     Running   0          25m   app=it-works-on-my-machine,pod-template-hash=68dcd5bd4d,tag=develop-9909142 
 ```
+
+## Design Flaws and Required Refactoring
+
+### Monorepo
+
+The decision to combine the GitOps repository with the service code—aimed at enabling build and deployment within a
+single pipeline run without relying on GitHub API calls (to keep the testing assignment lightweight)—introduced several
+issues:
+
+- Merges must be avoided during pipeline execution.
+- Release tags are applied to GitOps commits rather than merge commits, reducing traceability and making it harder to
+  track actual code changes.
+
+> **Real word solution:** Split GitOps and service code into separate repos.
+
+### GitFlow
+
+Using Pure GitFlow is impossible if we would like to enforce restrictions with GitHub Branch Protection Rules, and use
+PRs. It brought:
+
+- Redundant buid-deploy cycle to have the artifact built from release to main merge
+- As GitFlow has two crucial branches - main and develop, additional configuration required to handle pull requests on
+  non-default branches
+
+> **Real word solution:** Use more sophisticated flows, which keeps release branches not merged to main and uses main as
+> develop
+
+### SHA1 tags for dev builds
+Tricky to handle wit GitHub PRs which don't create real commits.
+> **Real word solution:** Use more sophisticated flows, which keeps release branches not merged to main and uses main as
+> develop
 
 ## Afterparty Backlog
 
