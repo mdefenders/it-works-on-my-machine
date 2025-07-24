@@ -80,6 +80,16 @@ The report includes:
 
 ## Notifications
 
+![img.png](doc/images/img3.png)
+
+> The most critical notification is that the service has passed tests and was successfully deployed to the target
+> environment — this is already implemented wit Slack.
+> For failures, we currently rely on GitHub’s default email notifications. This approach is sufficient for the scope of
+> the testing assignment, but in a real-world scenario, more robust alerting would be appropriate. For example:
+
+- Sophisticated Custom Slack notifications can be added for specific events such as test failures or deployment errors.
+- Email-to-Slack forwarding can be configured via your email provider to centralize alerts.
+
 > Read the TL;DR below or reach out to us for more details.
 
 # TL;DR
@@ -121,6 +131,7 @@ However, the current design allows for their implementation in the future if nee
   for better maintainability and developer experience.
 
 - **Pinning reusable workflows** to tagged versions (`@vX`) instead of using the `dev` reference.
+- **Job failures** Sevurity vulnerabilties haven't been fixed to demonstrate job reporting and failures handling.
 
 ## Architecture & Design
 
