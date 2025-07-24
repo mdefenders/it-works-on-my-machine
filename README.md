@@ -3,14 +3,18 @@
 The CI/CD has been developed with the goal of making your work easier and more productive.  
 Feel free to reach out to the team and share your ideas for improvements.
 
-> **IMPORTANT:** All [reusable workflows](https://github.com/mdefenders/shared-workflows) are stored in a separate
-> repository.
-
 ## Overview
 
 The flow is based on [GitFlow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) + Pull
 Request principles, using GitHub Actions for CI and a GitOps tool (e.g., ArgoCD, FluxCD) for CD.  
 In most cases, your only interface will be the [GitHub UI](https://github.com/mdefenders/it-works-on-my-machine/).
+
+GitHub Actions workflow files are located in the `.github/workflows` directory. Each file defines an environment- or
+branch-specific pipeline that combines a tailored set of reusable workflows.
+
+
+> **IMPORTANT:** All [reusable workflows](https://github.com/mdefenders/shared-workflows) are stored in a separate
+> repository.
 
 ## Promote Your Code from Feature Branch to Production
 
