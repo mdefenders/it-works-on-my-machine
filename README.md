@@ -109,8 +109,8 @@ time-saving reasons.
 However, the current design allows for their implementation in the future if needed:
 
 - **Simultaneous feature builds** in the development environment and **multiple release versions** deployed to staging
-  or production.  
-  These scenarios require a service mesh or complex deployment strategies, which are beyond the scope of this
+  or production. These scenarios require a service mesh or complex deployment strategies, which are beyond the scope of
+  this
   assignment.
 
 - **Simplified feature branch switching** in `dev` via external scripts was considered, but not implemented.  
@@ -133,8 +133,19 @@ However, the current design allows for their implementation in the future if nee
 
 - **Pinning reusable workflows** to tagged versions (`@vX`) instead of using the `dev` reference.
 - **Job failures** Sevurity vulnerabilties haven't been fixed to demonstrate job reporting and failures handling.
-- **on_create** triggers intentionally not implemented because of the service behavior. In a real word scenario a
-  wrapper action may be created to route on create calls proper way.
+- **on_create** triggers intentionally not implemented because of the service behavior.
+
+> In a real word scenario a
+> wrapper action may be created to route on create calls proper way.
+
+- **Reusable workflows** with embedded Bash scripts were used for logic isolation and reuse due to:
+
+    - The lack of suitable, trustworthy community GitHub Actions that fit the required use cases
+    - The overhead of creating fully-fledged custom Actions was out of scope for this testing assignment
+
+> **Real-world recommendation:** For production-grade pipelines, it's recommended to implement custom GitHub Actions
+> with proper testing suites and documentation. This helps reduce the number of jobs, improves maintainability, and
+> reserves separate jobs mainly for true parallelism or environment-specific logic.
 
 ## Architecture & Design
 
