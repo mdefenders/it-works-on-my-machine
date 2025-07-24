@@ -3,6 +3,8 @@
 The CI/CD has been developed with the goal of making your work easier and more productive.  
 Feel free to reach out to the team and share your ideas for improvements.
 
+> **IMPORTANT:** All [reusable workflows](https://github.com/mdefenders/shared-workflows) places on separate repo 
+
 ## Overview
 
 The flow is based on [GitFlow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) + Pull
@@ -61,8 +63,9 @@ At the moment, only the current service's URL is available through the `$SERVICE
 
 ## Workflow Run Report
 
-You can access the workflow run via the GitHub UI — either from the **Actions** tab of the repository or from the
-notification received after deployment.  
+You can access the workflow run directly through the **Actions** tab in the GitHub repository, or via a direct link
+included in the post-deployment notification.
+
 The report includes:
 
 - A visual workflow jobs graph showing each pipeline step and its status
@@ -108,31 +111,33 @@ The following features, while important in real-world scenarios, were intentiona
 time-saving reasons.  
 However, the current design allows for their implementation in the future if needed:
 
-- **Simultaneous feature builds** in the development environment and **multiple release versions** deployed to staging
-  or production.  
-  These scenarios require a service mesh or complex deployment strategies, which are beyond the scope of this
-  assignment.
-
+- **Simultaneous feature branch deployments** in the development environment and **multiple release versions** deployed
+  to staging or production. These scenarios require a service mesh or complex deployment strategies, which are beyond
+  the scope of this assignment.
 - **Simplified feature branch switching** in `dev` via external scripts was considered, but not implemented.  
   While this could allow developers to switch between branches more easily, it would break the **zero-click** automation
   goal.
-
 - **Blue/Green or Canary deployments.**  
   Standard Kubernetes rollout strategies are sufficient for this service's reliability needs.
-
-- **Kubernetes infrastructure provisioning as IaC.**
-
+- **Kubernetes infrastructure provisioning as IaaC.**
 - **Cross-service integration** in end-to-end tests during release deployments.
-
 - **Automated onboarding of new services.**
-
 - **Promotion flow automation.**
-
-- **Replacing inline bash scripts** in CI/CD pipeline steps with custom or community-maintained GitHub Actions  
-  for better maintainability and developer experience.
-
 - **Pinning reusable workflows** to tagged versions (`@vX`) instead of using the `dev` reference.
-- **Job failures** Sevurity vulnerabilties haven't been fixed to demonstrate job reporting and failures handling.
+- **Job failures** Security vulnerabilities haven't been fixed to demonstrate job reporting and failures handling.
+- **on_create** triggers intentionally not implemented because of the service behavior.
+
+> In a real word scenario a
+> wrapper action may be created to route on create calls proper way.
+
+- **Reusable workflows** with embedded Bash scripts were used for logic isolation and reuse due to:
+
+    - The lack of suitable, trustworthy community GitHub Actions that fit the required use cases
+    - The overhead of creating fully-fledged custom Actions was out of scope for this testing assignment
+
+> **Real-world recommendation:** For production-grade pipelines, it's recommended to implement custom GitHub Actions
+> with proper testing suites and documentation. This helps reduce the number of jobs, improves maintainability, and
+> reserves separate jobs mainly for true parallelism or environment-specific logic.
 
 ## Architecture & Design
 
@@ -397,7 +402,29 @@ The testing strategy is based on the following principles:
 
 ## GitHub Organization/Repo configuration
 
-- Set develop branch as the default branch
+Set develop branch as the default branch
+Workflows configured to use standard GitHub Hosted Runners
+Configure following secrets and variables on Organization or repository level:
+
+### Secrets
+
+| Value                | Description                                           | 
+|----------------------|-------------------------------------------------------|
+| `CICD_SLACK_WEBHOOK` | Full Slack Channel URL with tokens, provided by Slack |
+| `DOCKER_PASSWORD`    | DockerHub API Token                                   |
+
+### Variables
+
+| Name                   | Description                                                      | Default Value |
+|------------------------|------------------------------------------------------------------|--------------:|
+| DEPLOY_FORCE_RUN_TESTS | Force tests to run even if the deployment is not fully available |       `false` |
+| DEPLOY_PULL_COUNT      | Number of attempts to check deployment readiness                 |          `10` |
+| DEPLOY_PULL_INTERVAL   | Delay (in seconds) between deployment readiness checks           |          `20` |
+| DOCKER_USERNAME        | DockerHub username used for image publishing                     |               |
+| MIN_COVERAGE           | Minimum required test coverage percentage                        |          `80` |
+| NOTIFY_DEPLOY_SUCCESS  | Enable notifications on successful deployment                    |        `true` |
+| PUSH_FB_IMAGE          | Push Docker image for feature branch builds to DockerHub         |       `false` |
+| TRIVY_VERSION          | Version of Trivy used for container image vulnerability scanning |               |
 
 ## Local Kubernetes Deployment
 
