@@ -133,6 +133,8 @@ However, the current design allows for their implementation in the future if nee
 
 - **Pinning reusable workflows** to tagged versions (`@vX`) instead of using the `dev` reference.
 - **Job failures** Sevurity vulnerabilties haven't been fixed to demonstrate job reporting and failures handling.
+- **on_create** triggers intentionally not implemented because of the service behavior. In a real word scenario a
+  wrapper action may be created to route on create calls proper way.
 
 ## Architecture & Design
 
