@@ -46,7 +46,8 @@ the [GitHub Action workflow](https://github.com/mdefenders/it-works-on-my-machin
 > If smoke tests fail, the deployment is automatically rolled back by restoring the previous image tag in the GitOps
 > repository.
 
-**Hotfixes** are handled similarly to releases, but are created from the `master` branch for urgent fixes.
+**Hotfixes** (e.g., `hotfix/1.2.4`) are handled similarly to releases, but are created from the `master` branch for
+urgent fixes.
 > Bump the patch version manually when creating the hotfix branch.  
 > After merging the hotfix, also merge it back to `develop` to ensure the fix is included in future releases.
 
