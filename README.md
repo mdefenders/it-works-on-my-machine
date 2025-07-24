@@ -1,19 +1,79 @@
 # Brief Developer Onboarding Guide
 
-The CI/CD developed with goal to make your work easier and more productive. Feel fre to ping the team and share you
+The CI/CD developed with goal to make your work easier and more productive. Feel free to ping the team and share you
 ideas how to improve it.
 
 ## Overview
 
-Te flow is based on [GitFlow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) + PR
+The flow is based on [GitFlow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) + PR
 principles, using GitHub Actions for CI and a GitOps tool (e.g., ArgoCD, FluxCD) for CD. So your only tool to interact
 with it for most use-cases is [Github UI](https://github.com/mdefenders/it-works-on-my-machine/).
 
 ## Promote your code from Feature Branch to Production
 
+**Create a feature branch** from `develop` (e.g., `feature/my-awesome-feature`), make your changes, commit and push.
+> CI/CD executes a pipeline dry-run, running code quality checks, unit tests, and dry-run docker build.
+
+**Create and Merge** a Pull Request (PR) to `develop` branch.
+> Code quality checks, unit tests, build and push to DockerHub the docker image, image security scan, deployment to the
+> dev kubernetes cluster/namespace, regression/integration test. You will get the deployment notification, with links
+> to the workflow run report accessible via GitHub UI and the deployed service URL
+
+**Create a release branch** from `develop` (e.g., `release/1.2.3`) whar you are ready to release, merge the macter back
+to it, and push.
+> The same behavior as for the `develop` branch, but the service is deployed to the staging environment to allow new
+> features development on dev, extended testing and polishing release on staging.
+
+**Merge the release branch** to `main` and push.
+> The same behavior as for the `release` branch, but:
+> - release versioned image built from teh master branch commit
+> - deployed to the pre-production environment, SRE can begin evaluating and adopting the release
+> - final end-to end testing
+
+**Trigger production deployment** by running the GitHub Action workflow manually.
+> On this step the service is deployed to the production environment, with the GitOps tool (e.g., ArgoCD, FluxCD). Smoke
+> tests are run to ensure the service is running and responsive. Release tag will be added to the repository. On smoke
+> test failure the deployment is rolled back to the previously deployed version automatically by restoring the previous
+> image tag in the GitOps repository.
+
+**Hotfixes** are handled similarly to releases, but created from the `master` branch, allowing urgent fixes to be
+deployed. Increase manually the patch version number on the hotfix branch creation. Merge hotfix branch back to develop
+before removing to ensure the fix is available in the next release.
+
 ## Add tests
 
+Under the tests folder you can find subfolders to add your unit, integration, and end-to-end tests. Now the simple unit
+test is placed as a placeholder. CI/CD pipeline will run the tests, placed in the folders on corresponding promotion
+stages. For integration tests, all services URLs are available via environment variables. Right now only the own service
+URL is available for tests via the $SERVICE_URL environment variable
+
+| Folder      | Stage         |
+|-------------|---------------|
+| unit        | All stages    |
+| integration | Dev, Staging  |
+| endtoend    | Preproduction |
+| smoke       | Production    |
+
 ## Workflow Run Report
+
+Open a workflow run with GitHub UI from the repo Actions tab, or from the notification you received after the
+deployment.
+There you can find:
+- Workflow jobs graph, showing the pipeline steps and their status
+- Testing results
+- Link to built image in DockerHub
+- Image vulnerability scan report (**Folded** by default to avoid noising the report)
+- GitOps deployment manifests changes with commit links
+- Direct links to build errors (if any)
+- Direct link to the deployed service
+
+[Example](https://github.com/mdefenders/it-works-on-my-machine/actions/runs/16481323482) of the workflow run report
+> Only collaborators with write access (or higher) can view them in the GitHub UI.
+
+![img.png](doc/images/img.png)
+![img.png](doc/images/img2.png)
+
+## Notifications
 
 > Read TL;DR or ping us for more details
 
@@ -34,14 +94,17 @@ saving, but may be implemented later keeping the current design:
 - Support of different simultaneous feature builds of the service deployed in the development environment and multiple
   releases of the service deployed in the staging or production environments, Both features require
   service mesh or complicated deployments, which are beyond the scope of this assignment.
-- Blue/Green or Canary deployments. Kubernetes deployments rolling out is sufficient for the current service to provide
+- Simpler feature branch switching may be implemented by external scripts to allow switching feature branches, deployed
+  to dev environment, but it brakes the requirement of zero-click deployment automation. So it is not implemented.
+- Blue/Green or Canary deployments. Kubernetes deployments rollout is sufficient for the current service to provide
   reliable deployments.
 - Kubernetes infrastructure provisioning as IaC.
 - Integration with other services for end-to-end tests on release deployment.
 - New services onboarding automation.
-- Release triggering automation.
-- Replace bash code in CI/CD pipeline steps with custom GitHub Actions for better maintainability.
-- Fixing shared workflows with tagged version instead of using `dev` reference.
+- Promotion flow automation.
+- Replacing bash code in CI/CD pipeline steps with custom GitHub Actions or well-supported community-provided Actions
+  to make better maintainable and developer-friendly.
+- Fixing reusable workflows with tagged version (@vX) instead of using `dev` reference.
 
 ## Architecture & Design
 
@@ -68,25 +131,25 @@ The service follows a Git-based promotion model:
     | Developer   |------------------->|  feature/*       |
     +-------------+                    +------------------+
                                            | CI only
-                                           | Unittests 
+                                           | Unit tests 
                                            v Build dry-run
      Merge PR into                     +------------------+
      develop                           |   develop        |
                                        +------------------+
-                                           | Build, 
+                                           | Build/push
                                            | Dev deploy
                                            v Regression/Integration
                                              tests
      Release branch created            +------------------+
      from develop                      |  release/x.y.z   |
                                        +------------------+
-                                           | Build,
+                                           | Build/push
                                            | Staging deploy
                                            v Integration tests
      Merge PR into                     +------------------+
      main                              |      main        |
                                        +------------------+
-                                           | Build,
+                                           | Build/push
                                            | Pre-Production deploy
                                            v End-to-End tests
      Prod depoy trigger                +------------------+
@@ -163,24 +226,40 @@ GitFlow model is used:
 
 ## Versioning Strategy
 
-Composite strategy combining Git semantics and `package.json`:
+Composite strategy combining Git semantics and SemVer, depending on the promotion stage
+versioned with:
 
-- Dev builds: tagged with short commit SHA (`dev-<sha>`)
-- Releases candidates: versioned by branch name and rc autoincrement (e.g., `release/1.2.3-rc-<sha>`)
-- On merge to `main`:
-    - `package.json` version updated with release version (e.g., `1.2.3`)
-    - Git tag `v1.2.3` created
-- Hotfixes update `package.json` and create tags similarly
+- Dev builds: short commit SHA1 (`dev-<sha>`).
+- Releases candidates/hotfixes: release/hotfix branch name and short commit SHA1 (e.g., `release|hotfix/1.2.3-rc-<sha>`)
+- Releases: SemVer (e.g. `1.2.3`)
+
+Builds and versions traceability:
+
+On all stages versions are available in:
+
+- docker image tags
+- Kubernetes pods labels
+- health check endpoints (`/health`)
+- GitHub Action Workflow run reports (With actual DockerHub links)
+
+On prod deployments a version tagg added to the git repository deployment commit.
 
 > Why:
 > - Using sha1 tagging fo dev builds allows to avoid noise in the repository with build tags and provides
     traceability
-> - Using `package.json` versioning for releases allows to use standard npm versioning and
+> - Using `version/package.json` versioning for releases allows to use standard npm versioning and
     semantic versioning, which is widely used in the Node.js ecosystem
 
-## Quality Gates
+## Code Quality Gates
 
-Code quality checks are enforced or recommended at various stages:
+Code Quality Gates are implemented via GitHub Actions Workflows, running on each push and checked on crucial branches
+PRs (`develop`, `release/*`, `main`). For this testing assignment repo Branch protection rulles are **NOT** enabled
+intentionally to demonstrate possible failures and avoid access control tuning for the action runners. For production
+implementation direct branch merge to the branches above may be disabled fot strict Code Quality Gates reinforcement.
+
+The strategy starts with fewer restrictions during early development to increase development velocity and gradually
+increases enforcement as code is
+promoted to higher environments.
 
 - Lint (ESLint or equivalent)
 - Code formatting
@@ -188,9 +267,6 @@ Code quality checks are enforced or recommended at various stages:
 - Unit & integration tests
 - Test coverage threshold
 - Image vulnerability scanning
-
-> The strategy starts with fewer restrictions during early development and gradually increases enforcement as code is
-> promoted to higher environments.
 
 ## Rollback Strategy
 
@@ -311,8 +387,11 @@ Still working... on *my* machine 🧃
 ## Basic security
 
 - npm dependency security checks are enabled via GitHub Actions on Code Quality Checks
-- Images are scanned for vulnerabilities with Trivy in the CI pipeline, devaloper branch and higher builds fail on
-  vulnerabilities. Scan report is attached to the pipeline run report.
+- Images are scanned for vulnerabilities with Trivy in the CI pipeline, developer branch and higher builds fail on
+  vulnerabilities. Scan report is attached to the pipeline run report and available via GitHub UI.
+
+> In real word scenario, extended code security checks may be easily added immediately after unit testing, but for the
+> testing assignment scanning the final image looks sufficient.
 
 ## Basic Traceability
 
@@ -358,6 +437,7 @@ issues:
 - Merges must be avoided during pipeline execution.
 - Release tags are applied to GitOps commits rather than merge commits, reducing traceability and making it harder to
   track actual code changes.
+- Back merge of master to develop/release/hotfix is required to merge GitOps manifests to allow release to master PRs
 
 > **Real word solution:** Split GitOps and service code into separate repos.
 
@@ -374,15 +454,17 @@ PRs. It brought:
 > develop
 
 ### SHA1 tags for dev builds
+
 Tricky to handle wit GitHub PRs which don't create real commits.
 > **Real word solution:** Use more sophisticated flows, which keeps release branches not merged to main and uses main as
 > develop
 
-## Afterparty Backlog
+## After-party Backlog
 
-- [ ] Graphana Dashboards
+- [ ] Grafana Dashboards
 - [ ] Rewrite Bash sections with custom GitHub Actions
 - [ ] Add service to Helm chart to make local testing easier
 - [ ] Replace more hardcoded values with GitHub Actions Variables
 - [ ] Enable pre-created Branch Protection Rules and allow GitHub Actions to push to protected branches
-- [ ] Manual staging End-to-End triggering
+- [ ] Manual staging/preprod End-to-End triggering
+- [ ] Update package.json service version update on a release cut
