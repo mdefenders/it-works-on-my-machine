@@ -9,6 +9,7 @@ on:
       - 'deploy/**'
       - '**/*.md'
       - 'versions.json'
+      - 'doc/**'
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
