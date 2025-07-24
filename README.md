@@ -400,7 +400,29 @@ The testing strategy is based on the following principles:
 
 ## GitHub Organization/Repo configuration
 
-- Set develop branch as the default branch
+Set develop branch as the default branch
+Workflows configured to use standard GitHub Hosted Runners
+Configure following secrets and variables on Organization or repository level:
+
+### Secrets
+
+| Value                | Description                                           | 
+|----------------------|-------------------------------------------------------|
+| `CICD_SLACK_WEBHOOK` | Full Slack Channel URL with tokens, provided by Slack |
+| `DOCKER_PASSWORD`    | DockerHub API Token                                   |
+
+### Variables
+
+| Name                   | Description                                                      | Default Value |
+|------------------------|------------------------------------------------------------------|--------------:|
+| DEPLOY_FORCE_RUN_TESTS | Force tests to run even if the deployment is not fully available |       `false` |
+| DEPLOY_PULL_COUNT      | Number of attempts to check deployment readiness                 |          `10` |
+| DEPLOY_PULL_INTERVAL   | Delay (in seconds) between deployment readiness checks           |          `20` |
+| DOCKER_USERNAME        | DockerHub username used for image publishing                     |               |
+| MIN_COVERAGE           | Minimum required test coverage percentage                        |          `80` |
+| NOTIFY_DEPLOY_SUCCESS  | Enable notifications on successful deployment                    |        `true` |
+| PUSH_FB_IMAGE          | Push Docker image for feature branch builds to DockerHub         |       `false` |
+| TRIVY_VERSION          | Version of Trivy used for container image vulnerability scanning |               |
 
 ## Local Kubernetes Deployment
 
