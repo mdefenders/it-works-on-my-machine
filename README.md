@@ -17,8 +17,7 @@ In most cases, your only interface will be the [GitHub UI](https://github.com/md
 **Create and merge a Pull Request (PR)** to the `develop` branch.
 > Code quality checks, unit tests, Docker image build and push to DockerHub, image security scan, deployment to the
 `dev` Kubernetes environment, regression and integration tests.  
-> You'll receive a deployment notification with links to the workflow run report and the deployed service URL via the
-> GitHub UI.
+> You'll receive a deployment notification with links to the workflow run report and the deployed service URL.
 
 **Create a release branch** from `develop` (e.g., `release/1.2.3`) when you're ready to release. Merge `master` back
 into it and push.
@@ -31,7 +30,9 @@ into it and push.
 > - The service is deployed to the `pre-production` environment, allowing SRE to evaluate and validate the release
 > - Final end-to-end testing is performed
 
-**Trigger production deployment** by manually running the GitHub Action workflow on the `main` branch.
+**Trigger production deployment** by manually running
+the [GitHub Action workflow](https://github.com/mdefenders/it-works-on-my-machine/actions/workflows/prod-cd.yaml) on the
+**`main`** branch.
 > The service is deployed to the `production` environment using the GitOps tool (e.g., ArgoCD, FluxCD). Smoke tests
 > validate that the service is running and responsive.  
 > A release tag is added to the repository.  
