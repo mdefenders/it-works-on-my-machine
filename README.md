@@ -61,8 +61,9 @@ At the moment, only the current service's URL is available through the `$SERVICE
 
 ## Workflow Run Report
 
-You can access the workflow run via the GitHub UI — either from the **Actions** tab of the repository or from the
-notification received after deployment.  
+You can access the workflow run directly through the **Actions** tab in the GitHub repository, or via a direct link
+included in the post-deployment notification.
+
 The report includes:
 
 - A visual workflow jobs graph showing each pipeline step and its status
@@ -108,31 +109,20 @@ The following features, while important in real-world scenarios, were intentiona
 time-saving reasons.  
 However, the current design allows for their implementation in the future if needed:
 
-- **Simultaneous feature builds** in the development environment and **multiple release versions** deployed to staging
-  or production. These scenarios require a service mesh or complex deployment strategies, which are beyond the scope of
-  this
-  assignment.
-
+- **Simultaneous feature branch deployments** in the development environment and **multiple release versions** deployed
+  to staging or production. These scenarios require a service mesh or complex deployment strategies, which are beyond
+  the scope of this assignment.
 - **Simplified feature branch switching** in `dev` via external scripts was considered, but not implemented.  
   While this could allow developers to switch between branches more easily, it would break the **zero-click** automation
   goal.
-
 - **Blue/Green or Canary deployments.**  
   Standard Kubernetes rollout strategies are sufficient for this service's reliability needs.
-
-- **Kubernetes infrastructure provisioning as IaC.**
-
+- **Kubernetes infrastructure provisioning as IaaC.**
 - **Cross-service integration** in end-to-end tests during release deployments.
-
 - **Automated onboarding of new services.**
-
 - **Promotion flow automation.**
-
-- **Replacing inline bash scripts** in CI/CD pipeline steps with custom or community-maintained GitHub Actions  
-  for better maintainability and developer experience.
-
 - **Pinning reusable workflows** to tagged versions (`@vX`) instead of using the `dev` reference.
-- **Job failures** Sevurity vulnerabilties haven't been fixed to demonstrate job reporting and failures handling.
+- **Job failures** Security vulnerabilities haven't been fixed to demonstrate job reporting and failures handling.
 - **on_create** triggers intentionally not implemented because of the service behavior.
 
 > In a real word scenario a
