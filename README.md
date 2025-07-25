@@ -529,6 +529,24 @@ persistent commits.
 > **Real-world recommendation:** Use SemVer tags for all builds, including development, add SHA1 as additional tags or
 > metadata, to improve traceability and consistency.
 
+### Separate Workflow File per Branch/Promotion Step
+
+Maintaining separate workflow files for branches like `feature`, `develop`, `preprod`, `release`, and `hotfix` may
+initially seem redundant. Technically, they could be unified into a single workflow using conditional logic for each
+promotion stage.
+
+However, this split offers several advantages:
+
+- Clearer separation of concerns
+- Safer and more focused updates
+- Easier debugging and testing of individual stages
+
+The trade-off is increased file duplication and slightly more complexity.
+
+> **Real-world recommendation:** For larger teams or production-grade systems, prefer well-structured,
+> environment-scoped workflows unless pipeline maintenance becomes a burden. Consider consolidation only when logic
+> becomes hard to maintain across many files.
+
 ## Summary
 
 This project presents a practical example of a modern CI/CD pipeline tailored for microservices, featuring:
