@@ -223,6 +223,13 @@ Key steps:
 
 ### GitHub Actions (CI)
 
+Reusable workflows were created for each branch and code promotion step to ensure logical separation, code reuse, and
+make the CI/CD process easier to maintain and more reliable.
+
+Most workflow steps and components are also implemented as reusable workflows using Bash scripts, specifically for the
+testing assignment. In a real-world scenario, it is recommended to implement custom GitHub Actions with proper testing
+and packaging to improve maintainability and reduce job runs.
+
 The CI pipeline, implemented with GitHub Actions, performs the following steps:
 
 - Code quality checks: linting, unit tests, and coverage threshold enforcement
