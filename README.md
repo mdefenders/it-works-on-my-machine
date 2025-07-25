@@ -3,13 +3,18 @@
 The CI/CD has been developed with the goal of making your work easier and more productive.  
 Feel free to reach out to the team and share your ideas for improvements.
 
-> **IMPORTANT:** All [reusable workflows](https://github.com/mdefenders/shared-workflows) places on separate repo 
-
 ## Overview
 
 The flow is based on [GitFlow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) + Pull
 Request principles, using GitHub Actions for CI and a GitOps tool (e.g., ArgoCD, FluxCD) for CD.  
 In most cases, your only interface will be the [GitHub UI](https://github.com/mdefenders/it-works-on-my-machine/).
+
+GitHub Actions workflow files are located in the `.github/workflows` directory. Each file defines an environment- or
+branch-specific pipeline that combines a tailored set of reusable workflows.
+
+
+> **IMPORTANT:** All [reusable workflows](https://github.com/mdefenders/shared-workflows) are stored in a separate
+> repository.
 
 ## Promote Your Code from Feature Branch to Production
 
@@ -41,7 +46,8 @@ the [GitHub Action workflow](https://github.com/mdefenders/it-works-on-my-machin
 > If smoke tests fail, the deployment is automatically rolled back by restoring the previous image tag in the GitOps
 > repository.
 
-**Hotfixes** are handled similarly to releases, but are created from the `master` branch for urgent fixes.
+**Hotfixes** (e.g., `hotfix/1.2.4`) are handled similarly to releases, but are created from the `master` branch for
+urgent fixes.
 > Bump the patch version manually when creating the hotfix branch.  
 > After merging the hotfix, also merge it back to `develop` to ensure the fix is included in future releases.
 
@@ -216,6 +222,13 @@ Key steps:
 ## CI/CD Pipeline Logic
 
 ### GitHub Actions (CI)
+
+Reusable workflows were created for each branch and code promotion step to ensure logical separation, code reuse, and
+make the CI/CD process easier to maintain and more reliable.
+
+Most workflow steps and components are also implemented as reusable workflows using Bash scripts, specifically for the
+testing assignment. In a real-world scenario, it is recommended to implement custom GitHub Actions with proper testing
+and packaging to improve maintainability and reduce job runs.
 
 The CI pipeline, implemented with GitHub Actions, performs the following steps:
 
