@@ -102,6 +102,23 @@ The report includes:
 
 > Read the TL;DR below or reach out to us for more details.
 
+## Monitoring & Observability
+
+A high-level overview of pipeline runs and deployments is available through
+the [Grafana Cloud Dashboard](https://aditor.grafana.net/public-dashboards/4707a3e0a24841b69ba59eba59a2f5be/) (free
+tier).
+
+Only essential metrics are collected to provide quick insights into:
+
+- What succeeded
+- What failed
+- How long each stage took
+
+To drill down into specific runs, simply click on the corresponding link in the dashboard — it will take you directly to
+the detailed GitHub Actions workflow execution.
+
+![img.png](doc/images/img4.png)
+
 # TL;DR
 
 ## Goals
@@ -144,6 +161,12 @@ However, the current design allows for their implementation in the future if nee
 > **Real-world recommendation:** For production-grade pipelines, it's recommended to implement custom GitHub Actions
 > with proper testing suites and documentation. This helps reduce the number of jobs, improves maintainability, and
 > reserves separate jobs mainly for true parallelism or environment-specific logic.
+
+- No detailed log shipping per job was implemented.
+
+> **Real-world recommendation:** It's valuable to centralize job-level logs and error details in a monitoring system.  
+> This enables faster root cause analysis by providing visibility into which specific steps or commands caused a
+> failure.
 
 ## Architecture & Design
 
@@ -421,10 +444,11 @@ Configure following secrets and variables on Organization or repository level:
 
 ### Secrets
 
-| Value                | Description                                           | 
-|----------------------|-------------------------------------------------------|
-| `CICD_SLACK_WEBHOOK` | Full Slack Channel URL with tokens, provided by Slack |
-| `DOCKER_PASSWORD`    | DockerHub API Token                                   |
+| Value                | Description                                                | 
+|----------------------|------------------------------------------------------------|
+| `CICD_SLACK_WEBHOOK` | Full Slack Channel URL with tokens, provided by Slack      |
+| `DOCKER_PASSWORD`    | DockerHub API Token                                        |
+| `PROM_PUSH_TOKEN`    | Grafana Cloud base64 encoded username:token for Basic Auth |
 
 ### Variables
 
@@ -438,6 +462,7 @@ Configure following secrets and variables on Organization or repository level:
 | NOTIFY_DEPLOY_SUCCESS  | Enable notifications on successful deployment                    |        `true` |
 | PUSH_FB_IMAGE          | Push Docker image for feature branch builds to DockerHub         |       `false` |
 | TRIVY_VERSION          | Version of Trivy used for container image vulnerability scanning |               |
+| LOKI_PUSH_URL          | Grafana Cloud Loki push full URL                                 |               |
 
 ## Local Kubernetes Deployment
 
@@ -546,6 +571,15 @@ The trade-off is increased file duplication and slightly more complexity.
 > **Real-world recommendation:** For larger teams or production-grade systems, prefer well-structured,
 > environment-scoped workflows unless pipeline maintenance becomes a burden. Consider consolidation only when logic
 > becomes hard to maintain across many files.
+
+### Monitoring and Observability
+
+To improve log parsing and analysis in Grafana Cloud, the log format should be switched from plain text to structured
+JSON. This change is best implemented after migrating from Bash to a more JSON-friendly scripting or programming
+language.
+
+Additionally, long-running job alerting should be introduced to ensure that any unusually long executions are detected
+and properly addressed in real time.
 
 ## Summary
 
