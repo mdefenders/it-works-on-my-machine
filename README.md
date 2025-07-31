@@ -604,7 +604,7 @@ offering a solid foundation for building robust and automated delivery pipelines
 
 ## After-party Backlog
 
-- [ ] Create Grafana dashboards for monitoring and alerting
+- [X] Create Grafana dashboards for monitoring and alerting
 - [ ] Replace Bash scripts in the pipeline with custom or community-supported GitHub Actions for better maintainability
 - [ ] Integrate the K8S service into the Helm chart to simplify local testing and deployment
 - [ ] Replace hardcoded values with GitHub Actions variables for improved flexibility
@@ -612,3 +612,7 @@ offering a solid foundation for building robust and automated delivery pipelines
   to protected branches
 - [ ] Add manual triggers for staging and pre-production end-to-end test executions
 - [ ] Automate updating the service version in `package.json` during release branch creation
+- [ ] Add DependaBot PR to FeatureBranch Workflow filters
+- [ ] Add cost saving undeploy on success and undeploy on failure options
+- [ ] Add workflow to automate release branch creation
+- [ ] Move from GitFlow to Branch-per-release or Trunk-based development
