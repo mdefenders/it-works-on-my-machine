@@ -17,5 +17,5 @@ concurrency:
 jobs:
   call-ci:
     name: Call Hotfix-CI Workflow
-    uses: mdefenders/shared-workflows/.github/workflows/hotfix-ci.yaml@dev
+    uses: mdefenders/shared-workflows/.github/workflows/hotfix-ci.yaml@v2
     secrets: inherit

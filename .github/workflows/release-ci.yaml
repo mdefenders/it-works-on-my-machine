@@ -17,5 +17,5 @@ concurrency:
 jobs:
   call-ci:
     name: Call Release-CI Workflow
-    uses: mdefenders/shared-workflows/.github/workflows/release-ci.yaml@dev
+    uses: mdefenders/shared-workflows/.github/workflows/release-ci.yaml@v2
     secrets: inherit

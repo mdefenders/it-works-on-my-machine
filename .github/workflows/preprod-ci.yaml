@@ -17,5 +17,5 @@ concurrency:
 jobs:
   call-ci:
     name: Call PreProd-CI Workflow
-    uses: mdefenders/shared-workflows/.github/workflows/preprod-ci.yaml@dev
+    uses: mdefenders/shared-workflows/.github/workflows/preprod-ci.yaml@v2
     secrets: inherit

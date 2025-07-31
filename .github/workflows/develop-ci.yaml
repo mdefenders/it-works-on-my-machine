@@ -17,5 +17,5 @@ concurrency:
 jobs:
   call-ci:
     name: Call Develop-CI Workflow
-    uses: mdefenders/shared-workflows/.github/workflows/develop-ci.yaml@dev
+    uses: mdefenders/shared-workflows/.github/workflows/develop-ci.yaml@v2
     secrets: inherit

@@ -9,5 +9,5 @@ concurrency:
 jobs:
   call-cd:
     name: Promote Preprod Workflow
-    uses: mdefenders/shared-workflows/.github/workflows/prod-cd.yaml@dev
+    uses: mdefenders/shared-workflows/.github/workflows/prod-cd.yaml@v2
     secrets: inherit

@@ -17,5 +17,5 @@ concurrency:
 jobs:
   call-ci:
     name: Call Feature-CI Workflow
-    uses: mdefenders/shared-workflows/.github/workflows/feature-ci.yaml@dev
+    uses: mdefenders/shared-workflows/.github/workflows/feature-ci.yaml@v2
     secrets: inherit
