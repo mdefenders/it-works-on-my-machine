@@ -613,6 +613,6 @@ offering a solid foundation for building robust and automated delivery pipelines
 - [ ] Add manual triggers for staging and pre-production end-to-end test executions
 - [ ] Automate updating the service version in `package.json` during release branch creation
 - [ ] Add DependaBot PR to FeatureBranch Workflow filters
-- [ ] Add cost saving unndeploy on success and undeoloy on failure options
-- [ ] Add workflow to atomate release branch creation
-- [ ] Move from GitFlow to Branch-per-release
+- [ ] Add cost saving undeploy on success and undeploy on failure options
+- [ ] Add workflow to automate release branch creation
+- [ ] Move from GitFlow to Branch-per-release or Trunk-based development
