@@ -614,4 +614,5 @@ offering a solid foundation for building robust and automated delivery pipelines
 - [ ] Automate updating the service version in `package.json` during release branch creation
 - [ ] Add DependaBot PR to FeatureBranch Workflow filters
 - [ ] Add cost saving unndeploy on success and undeoloy on failure options
-- [ ] Add workflow to atomate rekease branch creation
+- [ ] Add workflow to atomate release branch creation
+- [ ] Move from GitFlow to Branch-per-release
